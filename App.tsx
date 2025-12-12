@@ -1,12 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
+import { Footer } from './components/Footer';
 import { ChatWidget } from './components/ChatWidget';
 import { Home } from './pages/Home';
-
-// Placeholder components for new pages (will be implemented next)
-const About = () => <div className="pt-32 text-center text-2xl font-bold">ABOUT PAGE COMING SOON</div>;
-const Services = () => <div className="pt-32 text-center text-2xl font-bold">SERVICES PAGE COMING SOON</div>;
-const Contact = () => <div className="pt-32 text-center text-2xl font-bold">CONTACT PAGE COMING SOON</div>;
+import { About } from './pages/About';
+import { Services } from './pages/Services';
+import { Contact } from './pages/Contact';
 
 function App() {
   return (
@@ -24,6 +23,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
         </Routes>
 
+        <Footer />
         <ChatWidget />
 
         {/* Floating Action Button / Corner Element */}

@@ -3,7 +3,7 @@ import { ArrowDown, Plus } from 'lucide-react';
 
 export const Hero: React.FC = () => {
    return (
-      <div className="relative w-full min-h-screen bg-[#030303] flex flex-col items-center justify-center overflow-hidden pt-20">
+      <div id="home" className="relative w-full min-h-screen bg-[#030303] flex flex-col items-center justify-center overflow-hidden pt-20">
 
          {/* Background Elements */}
          <div className="absolute inset-0 z-0">

@@ -1,13 +1,19 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Menu, Search, ShoppingBag } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <nav className="fixed top-0 left-0 w-full z-50 px-6 py-6 mix-blend-difference text-white">
       <div className="flex justify-between items-center max-w-[1800px] mx-auto">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 group cursor-pointer">
+        <div onClick={() => scrollToSection('home')} className="flex items-center gap-2 group cursor-pointer">
           <div className="w-8 h-8 border border-white rotate-45 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-colors duration-300">
             <span className="font-orbitron font-bold text-xs -rotate-45">S</span>
           </div>
@@ -15,20 +21,20 @@ export const Navbar: React.FC = () => {
             <span className="font-syncopate font-bold text-xl leading-none tracking-widest">SAMURAI</span>
             <span className="text-[0.5rem] tracking-[0.3em] opacity-70">SYSTEMS V.1</span>
           </div>
-        </Link>
+        </div>
 
         {/* Center Links - Desktop */}
         <div className="hidden md:flex items-center gap-12">
           {[
-            { name: 'HOME', path: '/' },
-            { name: 'ABOUT', path: '/about' },
-            { name: 'SERVICES', path: '/services' },
-            { name: 'CONTACT', path: '/contact' }
+            { name: 'HOME', id: 'home' },
+            { name: 'ABOUT', id: 'about' },
+            { name: 'PRODUCTS', id: 'products' },
+            { name: 'CONTACT', id: 'contact' }
           ].map((item) => (
-            <Link key={item.name} to={item.path} className="relative text-xs font-bold tracking-[0.2em] hover:text-[#ff2a2a] transition-colors group">
+            <button key={item.name} onClick={() => scrollToSection(item.id)} className="relative text-xs font-bold tracking-[0.2em] hover:text-[#ff2a2a] transition-colors group uppercase">
               {item.name}
               <span className="absolute -bottom-2 left-0 w-0 h-[1px] bg-[#ff2a2a] group-hover:w-full transition-all duration-300"></span>
-            </Link>
+            </button>
           ))}
         </div>
 

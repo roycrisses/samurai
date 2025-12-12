@@ -11,7 +11,7 @@ export const Contact: React.FC = () => {
     };
 
     return (
-        <div className="pt-32 pb-20 px-6 min-h-screen">
+        <div id="contact" className="pt-32 pb-20 px-6 min-h-screen">
             <div className="max-w-[1200px] mx-auto">
 
                 <div className="flex flex-col lg:flex-row gap-16">

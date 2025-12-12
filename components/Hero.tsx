@@ -55,7 +55,7 @@ export const Hero: React.FC = () => {
                {/* Using a high-quality katana image with a mix-blend mode or transparent bg to float seamlessy */}
                <div className="relative w-full h-[150%] animate-float flex items-center justify-center">
                   <img
-                     src="https://pngimg.com/uploads/katana/katana_PNG22.png"
+                     src="/assets/katana-1.png"
                      alt="Legendary Katana"
                      className="w-full h-full object-contain filter drop-shadow-[0_0_15px_rgba(255,42,42,0.4)]"
                   />

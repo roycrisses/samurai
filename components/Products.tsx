@@ -1,114 +1,159 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 
-export const Products: React.FC = () => {
+// Component for a single Katana Section
+interface KatanaSectionProps {
+    id: string;
+    name: string;
+    subtitle: string;
+    color: string; // Hex color for theme
+    imageSrc: string; // Specific image for this katana
+    hueRotate?: number; // Optional hue rotation
+    specs: {
+        hiltText: string;
+        hiltStat: string;
+        edgeText: string;
+        edgeStat: string;
+        skillName: string;
+        skillDesc: string;
+    };
+}
+
+const KatanaReview: React.FC<KatanaSectionProps> = ({ id, name, subtitle, color, imageSrc, hueRotate = 0, specs }) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll({
         target: containerRef,
         offset: ["start start", "end end"]
     });
 
-    // Smooth out the scroll progress
     const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
 
-    // Animation values based on scroll
-    const rotate = useTransform(smoothProgress, [0, 1], [45, -45]); // Rotate from 45deg to -45deg
-    const scale = useTransform(smoothProgress, [0, 0.2, 0.8, 1], [0.8, 1.2, 1.2, 1]); // Zoom in slightly
-    const x = useTransform(smoothProgress, [0, 1], [0, 0]); // Keep centered mainly, maybe shift slightly if needed
+    const rotate = useTransform(smoothProgress, [0, 1], [45, -45]);
+    const scale = useTransform(smoothProgress, [0, 0.2, 0.8, 1], [0.8, 1.2, 1.2, 1]);
 
-    // Opacity for different phases
-    const phase1Opacity = useTransform(smoothProgress, [0.1, 0.2, 0.3, 0.4], [0, 1, 1, 0]); // Hilt Phase
-    const phase2Opacity = useTransform(smoothProgress, [0.4, 0.5, 0.6, 0.7], [0, 1, 1, 0]); // Blade Phase
-    const phase3Opacity = useTransform(smoothProgress, [0.7, 0.8, 0.9, 1.0], [0, 1, 1, 0]); // Tip/Skill Phase
+    // Opacity Phases
+    const phase1Opacity = useTransform(smoothProgress, [0.1, 0.2, 0.3, 0.4], [0, 1, 1, 0]);
+    const phase2Opacity = useTransform(smoothProgress, [0.4, 0.5, 0.6, 0.7], [0, 1, 1, 0]);
+    const phase3Opacity = useTransform(smoothProgress, [0.7, 0.8, 0.9, 1.0], [0, 1, 1, 0]);
 
     return (
-        <section id="products" ref={containerRef} className="h-[400vh] relative bg-[#050505]">
-
-            {/* Sticky Viewport */}
+        <div ref={containerRef} className="h-[300vh] relative bg-[#050505] border-t border-white/5">
             <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col items-center justify-center">
 
-                {/* Background Tech Elements */}
-                <div className="absolute inset-0 z-0">
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] border border-white/5 rounded-full animate-[spin_60s_linear_infinite]"></div>
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] border border-[#ff2a2a]/10 rounded-full animate-[spin_40s_linear_infinite_reverse]"></div>
+                {/* Dynamic Background */}
+                <div className="absolute inset-0 z-0 opacity-20 transition-colors duration-500" style={{ backgroundColor: `${color}10` }}>
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] border border-white/5 rounded-full animate-[spin_60s_linear_infinite]"></div>
                 </div>
 
-                {/* Header - Fades out as we inspect */}
+                {/* Title */}
                 <motion.div style={{ opacity: useTransform(smoothProgress, [0, 0.1], [1, 0]) }} className="absolute top-20 z-20 text-center">
-                    <h2 className="text-6xl md:text-8xl font-bold font-syncopate text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20">
-                        KATANA
+                    <h2 className="text-6xl md:text-8xl font-bold font-syncopate text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20" style={{ textShadow: `0 0 30px ${color}50` }}>
+                        {name}
                     </h2>
-                    <p className="font-mono text-[#ff2a2a] tracking-[0.5em]">SYSTEM INSPECTION</p>
+                    <p className="font-mono tracking-[0.5em]" style={{ color: color }}>{subtitle}</p>
                 </motion.div>
 
-                {/* The Katana */}
+                {/* Katana Image */}
                 <div className="relative z-10 w-full max-w-[1200px] h-[80vh] flex items-center justify-center">
                     <motion.div
-                        style={{ rotate, scale, x }}
+                        style={{ rotate, scale }}
                         className="w-full h-full flex items-center justify-center"
                     >
                         <img
-                            src="/assets/katana-1.png"
-                            alt="Interactive Katana"
-                            className="w-auto h-[120%] max-w-none object-contain filter drop-shadow-[0_0_50px_rgba(255,42,42,0.2)]"
+                            src={imageSrc}
+                            alt={name}
+                            className="w-auto h-[120%] max-w-none object-contain transition-all duration-500"
+                            style={{
+                                filter: `hue-rotate(${hueRotate}deg) drop-shadow(0 0 50px ${color}40)`
+                            }}
                         />
                     </motion.div>
 
-                    {/* --- ANNOTATIONS --- */}
-
-                    {/* Phase 1: Hilt / Handle */}
+                    {/* Annotations */}
                     <motion.div style={{ opacity: phase1Opacity }} className="absolute top-1/2 left-[10%] md:left-[20%] -translate-y-1/2 max-w-xs pointer-events-none">
                         <div className="flex items-center gap-4 mb-2">
-                            <div className="w-12 h-[1px] bg-[#ff2a2a]"></div>
-                            <h3 className="text-2xl font-orbitron font-bold">TSUKA (HILT)</h3>
+                            <div className="w-12 h-[1px]" style={{ backgroundColor: color }}></div>
+                            <h3 className="text-2xl font-orbitron font-bold">CORE (HILT)</h3>
                         </div>
-                        <p className="text-sm text-gray-400 font-mono leading-relaxed pl-16">
-                            Wrapped in <span className="text-white">nano-fiber ray skin</span> for maximum grip in zero-g environments.
-                            Bio-metric sensor integration unlocked only by registered owner.
-                        </p>
-                        <div className="pl-16 mt-4 flex gap-2">
-                            <span className="px-2 py-1 bg-[#ff2a2a]/20 text-[#ff2a2a] text-[10px] border border-[#ff2a2a]/50">GRIP: 100%</span>
-                            <span className="px-2 py-1 bg-white/5 text-gray-400 text-[10px] border border-white/10">LATENCY: 0ms</span>
+                        <p className="text-sm text-gray-400 font-mono leading-relaxed pl-16">{specs.hiltText}</p>
+                        <div className="pl-16 mt-4">
+                            <span className="px-2 py-1 text-[10px] border" style={{ borderColor: `${color}50`, backgroundColor: `${color}20`, color: color }}>STATS: {specs.hiltStat}</span>
                         </div>
                     </motion.div>
 
-                    {/* Phase 2: Blade / Edge */}
                     <motion.div style={{ opacity: phase2Opacity }} className="absolute top-[60%] right-[10%] md:right-[20%] max-w-xs text-right pointer-events-none">
                         <div className="flex items-center gap-4 mb-2 justify-end">
-                            <h3 className="text-2xl font-orbitron font-bold">HA (EDGE)</h3>
-                            <div className="w-12 h-[1px] bg-[#ff2a2a]"></div>
+                            <h3 className="text-2xl font-orbitron font-bold">EDGE</h3>
+                            <div className="w-12 h-[1px]" style={{ backgroundColor: color }}></div>
                         </div>
-                        <p className="text-sm text-gray-400 font-mono leading-relaxed pr-16">
-                            High-frequency vibrating blade. Cuts through <span className="text-white">reinforced plastosteel</span> like butter.
-                            Thermal core maintains 5000°C plasma capability.
-                        </p>
-                        <div className="pr-16 mt-4 flex gap-2 justify-end">
-                            <span className="px-2 py-1 bg-[#ff2a2a]/20 text-[#ff2a2a] text-[10px] border border-[#ff2a2a]/50">SHARPNESS: MAX</span>
-                            <span className="px-2 py-1 bg-white/5 text-gray-400 text-[10px] border border-white/10">HEAT: 5000°C</span>
+                        <p className="text-sm text-gray-400 font-mono leading-relaxed pr-16">{specs.edgeText}</p>
+                        <div className="pr-16 mt-4 flex justify-end">
+                            <span className="px-2 py-1 text-[10px] border" style={{ borderColor: `${color}50`, backgroundColor: `${color}20`, color: color }}>{specs.edgeStat}</span>
                         </div>
                     </motion.div>
 
-                    {/* Phase 3: Tip / Ultimate Skill */}
                     <motion.div style={{ opacity: phase3Opacity }} className="absolute bottom-[20%] left-1/2 -translate-x-1/2 text-center max-w-md pointer-events-none">
-                        <h3 className="text-4xl font-syncopate font-bold text-[#ff2a2a] mb-2 animate-pulse">ULTIMATE SKILL</h3>
-                        <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-white to-transparent mb-4"></div>
-                        <p className="text-lg text-white font-bold font-orbitron tracking-widest">"VOID SEVER"</p>
-                        <p className="text-xs text-gray-500 font-mono mt-2">
-                            DISCHARGES STORED KINETIC ENERGY IN A SINGLE DIMENSION-RENDING STRIKE. RANGE: 50M.
-                        </p>
+                        <h3 className="text-4xl font-syncopate font-bold mb-2 animate-pulse" style={{ color: color }}>ULTIMATE</h3>
+                        <p className="text-lg text-white font-bold font-orbitron tracking-widest">"{specs.skillName}"</p>
+                        <p className="text-xs text-gray-500 font-mono mt-2">{specs.skillDesc}</p>
                     </motion.div>
-
-                </div>
-
-                {/* Scroll Progress Indicator */}
-                <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
-                    <div className="w-[1px] h-12 bg-white/20 relative overflow-hidden">
-                        <motion.div style={{ height: smoothProgress }} className="w-full bg-[#ff2a2a] absolute top-0 left-0"></motion.div>
-                    </div>
-                    <span className="text-[10px] font-mono text-gray-500">SCROLL TO INSPECT</span>
                 </div>
 
             </div>
+        </div>
+    );
+};
+
+export const Products: React.FC = () => {
+    return (
+        <section id="products" className="relative">
+            <KatanaReview
+                id="void"
+                name="CRIMSON"
+                subtitle="BLOOD OATH"
+                color="#ff2a2a" // Red
+                imageSrc="/assets/katana-red.png"
+                specs={{
+                    hiltText: "Reinforced carbon-fiber weave. Absorbs impact shock for zero recoil.",
+                    hiltStat: "STABILITY: 100%",
+                    edgeText: "Crimson-infused plasma edge. Cauterizes wounds instantly.",
+                    edgeStat: "HEAT: 4000°C",
+                    skillName: "BLOOD MOON",
+                    skillDesc: "DRAINS ENERGY FROM ENEMIES ON CONTACT."
+                }}
+            />
+            <KatanaReview
+                id="lightning"
+                name="SHADOW"
+                subtitle="NIGHT STALKER"
+                color="#a8a8a8" // Silver/White
+                imageSrc="/assets/katana-black.png"
+                specs={{
+                    hiltText: "Stealth-matte finish. Absorbs radar waves.",
+                    hiltStat: "STEALTH: MAX",
+                    edgeText: "Mono-molecular obsidian edge. Invisible to the naked eye at speed.",
+                    edgeStat: "SHARPNESS: ∞",
+                    skillName: "PHANTOM CUT",
+                    skillDesc: "STRIKES FROM THE SHADOWS BEFORE YOU ARE SEEN."
+                }}
+            />
+            {/* Keeping one variant with hue rotation as a bonus */}
+            <KatanaReview
+                id="toxin"
+                name="VENOM"
+                subtitle="BIO-HAZARD"
+                color="#00ff41" // Matrix Green
+                imageSrc="/assets/katana-black.png"
+                hueRotate={120} // Rotate black/grey to greenish tint if possible, or just effect style
+                specs={{
+                    hiltText: "Corrosive-resistant polymer. Green fluid cooling system.",
+                    hiltStat: "TOXICITY: LETHAL",
+                    edgeText: "Coated in synthetic neurotoxin. Liquid core blade.",
+                    edgeStat: "ACIDITY: pH 0",
+                    skillName: "VIPER STRIKE",
+                    skillDesc: "RAPID FLURRY ATTACK THAT MELTS ARMOR."
+                }}
+            />
         </section>
     );
 };

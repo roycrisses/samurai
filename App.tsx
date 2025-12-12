@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import Lenis from '@studio-freight/lenis';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { ChatWidget } from './components/ChatWidget';
@@ -7,6 +9,29 @@ import { About } from './pages/About';
 import { Contact } from './pages/Contact';
 
 function App() {
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      wheelMultiplier: 1,
+      touchMultiplier: 2,
+    });
+
+    function raf(time: number) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+
+    return () => {
+      lenis.destroy();
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#030303] text-white relative selection:bg-[#ff2a2a] selection:text-white font-sans flex flex-col">
       {/* Global Grain Texture */}

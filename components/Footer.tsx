@@ -1,5 +1,6 @@
 import React from 'react';
 import { Github, Twitter, Instagram, Mail } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export const Footer: React.FC = () => {
     return (
@@ -11,48 +12,101 @@ export const Footer: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
                     {/* Brand */}
                     <div className="col-span-1 md:col-span-2">
-                        <h2 className="font-syncopate font-bold text-2xl mb-4 tracking-wider">SAMURAI<span className="text-[#ff2a2a]">.AI</span></h2>
-                        <p className="text-gray-400 max-w-md text-sm leading-relaxed">
-                            Forged in the future. We build digital blades for the modern ronin.
-                            Advanced web solutions with a lethal aesthetic.
-                        </p>
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.6 }}
+                        >
+                            <h2 className="font-syncopate font-bold text-2xl mb-4 tracking-wider">SAMURAI<span className="text-[#ff2a2a]">.AI</span></h2>
+                            <p className="text-gray-400 max-w-md text-sm leading-relaxed">
+                                Forged in the future. We build digital blades for the modern ronin.
+                                Advanced web solutions with a lethal aesthetic.
+                            </p>
+                        </motion.div>
                     </div>
 
                     {/* Links 1 */}
                     <div>
-                        <h3 className="font-orbitron font-bold text-[#ff2a2a] mb-6 tracking-widest text-xs">EXPLORE</h3>
+                        <motion.h3
+                            initial={{ opacity: 0, x: -20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: 0.2 }}
+                            className="font-orbitron font-bold text-[#ff2a2a] mb-6 tracking-widest text-xs"
+                        >
+                            EXPLORE
+                        </motion.h3>
                         <ul className="space-y-3 text-sm text-gray-400">
-                            <li><a href="/" className="hover:text-white transition-colors">HOME</a></li>
-                            <li><a href="/about" className="hover:text-white transition-colors">RONIN LORE</a></li>
-                            <li><a href="/services" className="hover:text-white transition-colors">ARMORY</a></li>
-                            <li><a href="/contact" className="hover:text-white transition-colors">COMM-LINK</a></li>
+                            {['HOME', 'ABOUT', 'PRODUCTS', 'CONTACT'].map((item, index) => (
+                                <motion.li
+                                    key={item}
+                                    initial={{ opacity: 0, x: -10 }}
+                                    whileInView={{ opacity: 1, x: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: 0.3 + (index * 0.1) }}
+                                >
+                                    <button
+                                        onClick={() => {
+                                            const el = document.getElementById(item.toLowerCase());
+                                            el?.scrollIntoView({ behavior: 'smooth' });
+                                        }}
+                                        className="hover:text-white transition-colors"
+                                    >
+                                        {item}
+                                    </button>
+                                </motion.li>
+                            ))}
                         </ul>
                     </div>
 
                     {/* Links 2 */}
                     <div>
-                        <h3 className="font-orbitron font-bold text-[#ff2a2a] mb-6 tracking-widest text-xs">LEGAL</h3>
+                        <motion.h3
+                            initial={{ opacity: 0, x: -20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: 0.4 }}
+                            className="font-orbitron font-bold text-[#ff2a2a] mb-6 tracking-widest text-xs"
+                        >
+                            LEGAL
+                        </motion.h3>
                         <ul className="space-y-3 text-sm text-gray-400">
-                            <li><a href="#" className="hover:text-white transition-colors">PRIVACY PROTOCOL</a></li>
-                            <li><a href="#" className="hover:text-white transition-colors">TERMS OF ENGAGEMENT</a></li>
-                            <li><a href="#" className="hover:text-white transition-colors">LICENSE</a></li>
+                            {['PRIVACY PROTOCOL', 'TERMS OF ENGAGEMENT', 'LICENSE'].map((item, index) => (
+                                <motion.li
+                                    key={item}
+                                    initial={{ opacity: 0, x: -10 }}
+                                    whileInView={{ opacity: 1, x: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: 0.5 + (index * 0.1) }}
+                                >
+                                    <a href="#" className="hover:text-white transition-colors">{item}</a>
+                                </motion.li>
+                            ))}
                         </ul>
                     </div>
                 </div>
 
                 {/* Bottom Bar */}
-                <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.8 }}
+                    className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4"
+                >
                     <p className="text-xs text-gray-500 font-mono">
                         © 2077 SAMURAI SYSTEMS. ALL RIGHTS RESERVED.
                     </p>
 
                     <div className="flex gap-6">
-                        <a href="#" className="text-gray-400 hover:text-[#ff2a2a] transition-colors"><Github size={18} /></a>
-                        <a href="#" className="text-gray-400 hover:text-[#ff2a2a] transition-colors"><Twitter size={18} /></a>
-                        <a href="#" className="text-gray-400 hover:text-[#ff2a2a] transition-colors"><Instagram size={18} /></a>
-                        <a href="#" className="text-gray-400 hover:text-[#ff2a2a] transition-colors"><Mail size={18} /></a>
+                        {[Github, Twitter, Instagram, Mail].map((Icon, idx) => (
+                            <a key={idx} href="#" className="text-gray-400 hover:text-[#ff2a2a] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10">
+                                <Icon size={16} />
+                            </a>
+                        ))}
                     </div>
-                </div>
+                </motion.div>
             </div>
         </footer>
     );
